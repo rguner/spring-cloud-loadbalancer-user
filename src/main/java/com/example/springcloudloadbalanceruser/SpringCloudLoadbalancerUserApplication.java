@@ -17,9 +17,9 @@ public class SpringCloudLoadbalancerUserApplication {
     private final WebClient.Builder loadBalancedWebClientBuilder;
     private final ReactorLoadBalancerExchangeFilterFunction lbFunction;
 
-    public SpringCloudLoadbalancerUserApplication(WebClient.Builder webClientBuilder,
+    public SpringCloudLoadbalancerUserApplication(WebClient.Builder loadBalancedWebClientBuilder,
                            ReactorLoadBalancerExchangeFilterFunction lbFunction) {
-        this.loadBalancedWebClientBuilder = webClientBuilder;
+        this.loadBalancedWebClientBuilder = loadBalancedWebClientBuilder;
         this.lbFunction = lbFunction;
     }
 
@@ -43,5 +43,16 @@ public class SpringCloudLoadbalancerUserApplication {
                 .build().get().uri("http://say-hello/greeting")
                 .retrieve().bodyToMono(String.class)
                 .map(greeting -> String.format("%s, %s!", greeting, name));
+
+    }
+
+    @RequestMapping("/hello-other")
+    public Mono<String> helloOther(@RequestParam(value = "name", defaultValue = "Ramazan") String name) {
+        return WebClient.builder()
+                .filter(lbFunction)
+                .build().get().uri("http://say-hello-other/greeting")
+                .retrieve().bodyToMono(String.class)
+                .map(greeting -> String.format("%s, %s!", greeting, name));
+
     }
 }

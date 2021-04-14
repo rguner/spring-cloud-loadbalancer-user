@@ -20,7 +20,7 @@ public class SayHelloConfiguration {
     @Bean
     @Primary
     ServiceInstanceListSupplier serviceInstanceListSupplier() {
-        return new DemoServiceInstanceListSuppler("say-hello");
+        return new DemoServiceInstanceListSuppler("say-hello-serviceId");
     }
 
 }
@@ -42,7 +42,7 @@ class DemoServiceInstanceListSuppler implements ServiceInstanceListSupplier {
     public Flux<List<ServiceInstance>> get() {
         return Flux.just(Arrays
                 .asList(new DefaultServiceInstance(serviceId + "1", serviceId, "localhost", 8090, false),
-                        new DefaultServiceInstance(serviceId + "2", serviceId, "localhost", 9092, false),
-                        new DefaultServiceInstance(serviceId + "3", serviceId, "localhost", 9999, false)));
+                        new DefaultServiceInstance(serviceId + "2", serviceId, "localhost", 8091, false),
+                        new DefaultServiceInstance(serviceId + "3", serviceId, "localhost", 8092, false)));
     }
 }
